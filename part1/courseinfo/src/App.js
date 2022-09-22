@@ -1,7 +1,7 @@
 // vim: set ft=javascriptreact :
 
 const Header = (course) => {
-  return <h1>{course.course}</h1>;
+  return <h1>{course.course.name}</h1>;
 };
 
 const Part = (props) => {
@@ -12,49 +12,60 @@ const Part = (props) => {
   );
 };
 
-const Content = (props) => {
+const Content = (course) => {
   return (
     <div>
-      <Part part={props.parts[0].name} exercise={props.parts[0].exercise} />
-      <Part part={props.parts[1].name} exercise={props.parts[1].exercise} />
-      <Part part={props.parts[2].name} exercise={props.parts[2].exercise} />
+      <Part
+        part={course.course.parts[0].name}
+        exercise={course.course.parts[0].exercise}
+      />
+      <Part
+        part={course.course.parts[1].name}
+        exercise={course.course.parts[1].exercise}
+      />
+      <Part
+        part={course.course.parts[2].name}
+        exercise={course.course.parts[2].exercise}
+      />
     </div>
   );
 };
 
-const Total = (props) => {
+const Total = (course) => {
   return (
     <p>
       Number of exercises{" "}
-      {props.parts[0].exercise +
-        props.parts[1].exercise +
-        props.parts[2].exercise}
+      {course.course.parts[0].exercise +
+        course.course.parts[1].exercise +
+        course.course.parts[2].exercise}
     </p>
   );
 };
 
 const App = () => {
-  const course = "Half Stack application development";
-  const parts = [
-    {
-      name: "Fundamentals of React",
-      exercise: 10,
-    },
-    {
-      name: "Using props to pass data",
-      exercise: 7,
-    },
-    {
-      name: "State of a component",
-      exercise: 14,
-    },
-  ];
+  const course = {
+    name: "Half Stack application development",
+    parts: [
+      {
+        name: "Fundamentals of React",
+        exercise: 10,
+      },
+      {
+        name: "Using props to pass data",
+        exercise: 7,
+      },
+      {
+        name: "State of a component",
+        exercise: 14,
+      },
+    ],
+  };
 
   return (
     <div>
       <Header course={course} />
-      <Content parts={parts} />
-      <Total parts={parts} />
+      <Content course={course} />
+      <Total course={course} />
     </div>
   );
 };
