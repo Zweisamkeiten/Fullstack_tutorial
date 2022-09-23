@@ -2,6 +2,19 @@
 
 import { useState } from "react";
 
+const Anecdote = (props) => {
+  return (
+    <div>
+      <p>{props.text}</p>
+      <p>has {props.votes} votes</p>
+    </div>
+  );
+};
+
+const Button = (props) => {
+  return <button onClick={props.handleClick}>{props.text}</button>;
+};
+
 const App = () => {
   const anecdotes = [
     "If it hurts, do it more often",
@@ -13,9 +26,28 @@ const App = () => {
     "Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients",
   ];
 
+  const [votes, setvotes] = useState(new Array(anecdotes.length).fill(0));
+
   const [selected, setselected] = useState(0);
 
-  return <div>{anecdotes[selected]}</div>;
+  const nextAnecdote = () => {
+    // generate a random number to choose an anecdote.
+    setselected(Math.floor(Math.random() * anecdotes.length));
+  };
+
+  const voteClick = () => {
+    const copy = [...votes];
+    copy[selected] += 1;
+    setvotes(copy);
+  };
+
+  return (
+    <div>
+      <Anecdote text={anecdotes[selected]} votes={votes[selected]} />
+      <Button handleClick={voteClick} text="vote" />
+      <Button handleClick={nextAnecdote} text="next anecdote" />
+    </div>
+  );
 };
 
 export default App;
