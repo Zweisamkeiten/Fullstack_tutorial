@@ -4,9 +4,10 @@ import { useState } from "react";
 
 const Statisticsline = (props) => {
   return (
-    <p>
-      {props.text} {props.value}
-    </p>
+    <tr>
+      <td>{props.text}</td>
+      <td> {props.value}</td>
+    </tr>
   );
 };
 
@@ -24,14 +25,16 @@ const Statistics = ({ good, neutral, bad }) => {
   const positive = (good / all) * 100;
   if (all != 0) {
     return (
-      <>
-        <Statisticsline text="good" value={good} />
-        <Statisticsline text="neutral" value={neutral} />
-        <Statisticsline text="bad" value={bad} />
-        <Statisticsline text="all" value={all} />
-        <Statisticsline text="average" value={average} />
-        <Statisticsline text="positive" value={positive + " %"} />
-      </>
+      <table>
+        <tbody>
+          <Statisticsline text="good" value={good} />
+          <Statisticsline text="neutral" value={neutral} />
+          <Statisticsline text="bad" value={bad} />
+          <Statisticsline text="all" value={all} />
+          <Statisticsline text="average" value={average} />
+          <Statisticsline text="positive" value={positive + " %"} />
+        </tbody>
+      </table>
     );
   }
   return <p>No feedback given</p>;
