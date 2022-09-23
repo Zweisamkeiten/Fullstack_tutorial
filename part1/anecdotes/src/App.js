@@ -41,11 +41,22 @@ const App = () => {
     setvotes(copy);
   };
 
+  const indexOfMostVotes = (votes) => {
+    const max = Math.max(...votes);
+    return votes.indexOf(max);
+  };
+
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <Anecdote text={anecdotes[selected]} votes={votes[selected]} />
       <Button handleClick={voteClick} text="vote" />
       <Button handleClick={nextAnecdote} text="next anecdote" />
+      <h1>Anecdote with most votes</h1>
+      <Anecdote
+        text={anecdotes[indexOfMostVotes(votes)]}
+        votes={votes[indexOfMostVotes(votes)]}
+      />
     </div>
   );
 };
