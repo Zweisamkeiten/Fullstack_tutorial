@@ -1,3 +1,5 @@
 part*/*/node_modules
 part*/*/.env
 part*/*/package-lock.json
+
+part*/*/public/index.html
