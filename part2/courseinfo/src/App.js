@@ -24,18 +24,16 @@ const Content = ({ parts }) => (
 );
 
 const Course = ({ course }) => {
+  const exercises_array = course.parts.map((c) => c.exercises);
+  const sum = exercises_array.reduce((previousValue, currentValue) => {
+    // console.log("what is happening", previousValue, currentValue);
+    return previousValue + currentValue;
+  });
   return (
     <div>
       <Header course={course.name} />
       <Content parts={course.parts} />
-      <Total
-        sum={
-          course.parts[0].exercises +
-          course.parts[1].exercises +
-          course.parts[2].exercises +
-          course.parts[3].exercises
-        }
-      />
+      <Total sum={sum} />
     </div>
   );
 };
