@@ -2,7 +2,11 @@
 
 const Header = ({ course }) => <h1>{course}</h1>;
 
-const Total = ({ sum }) => <p>Number of exercises {sum}</p>;
+const Total = ({ sum }) => (
+  <b>
+    <p>Number of exercises {sum}</p>
+  </b>
+);
 
 const Part = ({ part }) => (
   <p>
@@ -15,6 +19,7 @@ const Content = ({ parts }) => (
     <Part part={parts[0]} />
     <Part part={parts[1]} />
     <Part part={parts[2]} />
+    <Part part={parts[3]} />
   </>
 );
 
@@ -27,7 +32,8 @@ const Course = ({ course }) => {
         sum={
           course.parts[0].exercises +
           course.parts[1].exercises +
-          course.parts[2].exercises
+          course.parts[2].exercises +
+          course.parts[3].exercises
         }
       />
     </div>
@@ -53,6 +59,11 @@ const App = () => {
         name: "State of a component",
         exercises: 14,
         id: 3,
+      },
+      {
+        name: "Redux",
+        exercises: 11,
+        id: 4,
       },
     ],
   };
