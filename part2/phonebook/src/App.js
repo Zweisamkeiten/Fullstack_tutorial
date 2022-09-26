@@ -3,8 +3,11 @@
 import { useState } from "react";
 
 const App = () => {
-  const [persons, setpersons] = useState([{ name: "Arto Hellas" }]);
+  const [persons, setpersons] = useState([
+    { name: "Arto Hellas", number: "040-123456" },
+  ]);
   const [newName, setnewName] = useState("");
+  const [newNumber, setnewNumber] = useState("");
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -19,14 +22,20 @@ const App = () => {
 
     const person = {
       name: newName,
+      number: newNumber,
     };
 
     setpersons(persons.concat(person));
     setnewName("");
+    setnewNumber("");
   };
 
   const handleNameChange = (event) => {
     setnewName(event.target.value);
+  };
+
+  const handleNumberChange = (event) => {
+    setnewNumber(event.target.value);
   };
 
   return (
@@ -37,13 +46,18 @@ const App = () => {
           name: <input value={newName} onChange={handleNameChange} />
         </div>
         <div>
+          number: <input value={newNumber} onChange={handleNumberChange} />
+        </div>
+        <div>
           <button type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
       <div>
         {persons.map((person) => (
-          <p key={person.name}>{person.name}</p>
+          <p key={person.name}>
+            {person.name} {person.number}
+          </p>
         ))}
       </div>
     </div>
