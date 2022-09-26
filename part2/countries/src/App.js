@@ -89,7 +89,7 @@ const App = () => {
   const [countriesToShow, setcountriesToShow] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/countries").then((response) => {
+    axios.get("https://restcountries.com/v3.1/all").then((response) => {
       setcountries(response.data);
     });
   }, []);
