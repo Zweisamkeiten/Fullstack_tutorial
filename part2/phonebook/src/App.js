@@ -2,6 +2,49 @@
 
 import { useState } from "react";
 
+const Filter = ({ newFilter, handleFilterChange }) => {
+  return (
+    <div>
+      filter shown with{" "}
+      <input value={newFilter} onChange={handleFilterChange} />
+    </div>
+  );
+};
+
+const PersonForm = ({
+  addPerson,
+  inputName,
+  handleNameChange,
+  inputNumber,
+  handleNumberChange,
+}) => {
+  return (
+    <form onSubmit={addPerson}>
+      <div>
+        name: <input value={inputName} onChange={handleNameChange} />
+      </div>
+      <div>
+        number: <input value={inputNumber} onChange={handleNumberChange} />
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  );
+};
+
+const Persons = ({ personToShow }) => {
+  return (
+    <div>
+      {personToShow.map((person) => (
+        <p key={person.id}>
+          {person.name} {person.number}
+        </p>
+      ))}
+    </div>
+  );
+};
+
 const App = () => {
   const [persons, setpersons] = useState([
     { name: "Arto Hellas", number: "040-123456", id: 1 },
@@ -56,30 +99,17 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with{" "}
-        <input value={newFilter} onChange={handleFilterChange} />
-      </div>
+      <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} />
       <h2>add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm
+        onSubmit={addPerson}
+        inputName={newName}
+        handleNameChange={handleNameChange}
+        inputNumber={newNumber}
+        handleNumberChange={handleNumberChange}
+      />
       <h2>Numbers</h2>
-      <div>
-        {personToShow.map((person) => (
-          <p key={person.id}>
-            {person.name} {person.number}
-          </p>
-        ))}
-      </div>
+      <Persons personToShow={personToShow} />
     </div>
   );
 };
