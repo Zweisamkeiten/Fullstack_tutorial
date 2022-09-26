@@ -1,6 +1,7 @@
 // vim: set ft=javascriptreact :
 
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const Filter = ({ newFilter, handleFilterChange }) => {
   return (
@@ -46,16 +47,18 @@ const Persons = ({ personToShow }) => {
 };
 
 const App = () => {
-  const [persons, setpersons] = useState([
-    { name: "Arto Hellas", number: "040-123456", id: 1 },
-    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-  ]);
+  const [persons, setpersons] = useState([]);
   const [newName, setnewName] = useState("");
   const [newNumber, setnewNumber] = useState("");
   const [newFilter, setnewFilter] = useState("");
   const [personToShow, setpersonToShow] = useState(persons);
+
+  useEffect(() => {
+    axios.get("http://localhost:3001/persons").then((response) => {
+      setpersons(response.data);
+      setpersonToShow(response.data);
+    });
+  }, []);
 
   const addPerson = (event) => {
     event.preventDefault();
