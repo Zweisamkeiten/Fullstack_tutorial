@@ -10,6 +10,13 @@ const App = () => {
     event.preventDefault();
     console.log(event.target.value);
 
+    // 防止用户能够添加已经存在于电话簿中的名字
+    const names = persons.map((person) => person.name);
+    if (names.includes(newName)) {
+      window.alert(`${newName} is already added to phonebook`);
+      return;
+    }
+
     const person = {
       name: newName,
     };
