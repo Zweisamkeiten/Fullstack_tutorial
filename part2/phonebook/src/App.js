@@ -13,14 +13,14 @@ const Filter = ({ newFilter, handleFilterChange }) => {
 };
 
 const PersonForm = ({
-  addPerson,
+  onSubmit,
   inputName,
   handleNameChange,
   inputNumber,
   handleNumberChange,
 }) => {
   return (
-    <form onSubmit={addPerson}>
+    <form onSubmit={onSubmit}>
       <div>
         name: <input value={inputName} onChange={handleNameChange} />
       </div>
