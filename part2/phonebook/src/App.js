@@ -79,8 +79,37 @@ const App = () => {
     console.log(event.target.value);
 
     // 防止用户能够添加已经存在于电话簿中的名字
-    if (persons.filter((person) => person.name == newName).length > 0) {
-      window.alert(`${newName} is already added to phonebook`);
+    const duplicate = persons.filter((person) => person.name == newName);
+    if (duplicate.length === 1) {
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one`
+        )
+      ) {
+        // do update
+        const updatePerson = { ...duplicate[0], number: newNumber };
+        personService
+          .update(updatePerson.id, updatePerson)
+          .then((returnedPerson) => {
+            setpersons(
+              persons.map((person) =>
+                person.id !== returnedPerson.id ? person : returnedPerson
+              )
+            );
+            setpersonToShow(
+              persons
+                .map((person) =>
+                  person.id !== returnedPerson.id ? person : returnedPerson
+                )
+                .filter((p) =>
+                  p.name.toLowerCase().match(newFilter.toLowerCase())
+                )
+            );
+            setnewName("");
+            setnewNumber("");
+          });
+        return;
+      }
       return;
     }
 
