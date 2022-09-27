@@ -1,6 +1,5 @@
 // vim: set ft=javascriptreact :
 
-import axios from "axios";
 import { useEffect, useState } from "react";
 import personService from "./services/persons";
 
@@ -35,12 +34,26 @@ const PersonForm = ({
   );
 };
 
-const Persons = ({ personToShow }) => {
+const Persons = ({ personToShow, setpersonToShow }) => {
   return (
     <div>
       {personToShow.map((person) => (
         <p key={person.id}>
-          {person.name} {person.number}
+          {person.name} {person.number}{" "}
+          <button
+            onClick={() => {
+              if (window.confirm(`Delete ${person.name} ?`)) {
+                personService.remove(person.id).then((returnedinfo) => {
+                  console.log(returnedinfo);
+                  setpersonToShow(
+                    personToShow.filter((p) => p.id !== person.id)
+                  );
+                });
+              }
+            }}
+          >
+            delete
+          </button>
         </p>
       ))}
     </div>
@@ -115,7 +128,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons personToShow={personToShow} />
+      <Persons personToShow={personToShow} setpersonToShow={setpersonToShow} />
     </div>
   );
 };
