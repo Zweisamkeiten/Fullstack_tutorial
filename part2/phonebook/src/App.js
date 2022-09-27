@@ -3,68 +3,10 @@
 import { useEffect, useState } from "react";
 import personService from "./services/persons";
 import "./index.css";
-
-const Notification = ({ message, notifyStatus }) => {
-  if (message === null) return null;
-  return <div className={notifyStatus}>{message}</div>;
-};
-
-const Filter = ({ newFilter, handleFilterChange }) => {
-  return (
-    <div>
-      filter shown with{" "}
-      <input value={newFilter} onChange={handleFilterChange} />
-    </div>
-  );
-};
-
-const PersonForm = ({
-  onSubmit,
-  inputName,
-  handleNameChange,
-  inputNumber,
-  handleNumberChange,
-}) => {
-  return (
-    <form onSubmit={onSubmit}>
-      <div>
-        name: <input value={inputName} onChange={handleNameChange} />
-      </div>
-      <div>
-        number: <input value={inputNumber} onChange={handleNumberChange} />
-      </div>
-      <div>
-        <button type="submit">add</button>
-      </div>
-    </form>
-  );
-};
-
-const Persons = ({ persons, setpersons, personToShow, setpersonToShow }) => {
-  return (
-    <div>
-      {personToShow.map((person) => (
-        <p key={person.id}>
-          {person.name} {person.number}{" "}
-          <button
-            onClick={() => {
-              if (window.confirm(`Delete ${person.name} ?`)) {
-                personService.remove(person.id).then((returnedinfo) => {
-                  setpersons(persons.filter((p) => p.id !== person.id));
-                  setpersonToShow(
-                    personToShow.filter((p) => p.id !== person.id)
-                  );
-                });
-              }
-            }}
-          >
-            delete
-          </button>
-        </p>
-      ))}
-    </div>
-  );
-};
+import Persons from "./componments/Persons";
+import Filter from "./componments/Filter";
+import PersonForm from "./componments/PersonForm";
+import Notification from "./componments/Notification";
 
 const App = () => {
   const [persons, setpersons] = useState([]);
@@ -178,6 +120,15 @@ const App = () => {
     );
   };
 
+  const handleDelete = (person) => {
+    if (window.confirm(`Delete ${person.name} ?`)) {
+      personService.remove(person.id).then((returnedinfo) => {
+        setpersons(persons.filter((p) => p.id !== person.id));
+        setpersonToShow(personToShow.filter((p) => p.id !== person.id));
+      });
+    }
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -192,12 +143,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons
-        persons={persons}
-        setpersons={setpersons}
-        personToShow={personToShow}
-        setpersonToShow={setpersonToShow}
-      />
+      <Persons persons={personToShow} handleDelete={handleDelete} />
     </div>
   );
 };
