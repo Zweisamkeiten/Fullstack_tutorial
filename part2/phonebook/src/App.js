@@ -34,7 +34,7 @@ const PersonForm = ({
   );
 };
 
-const Persons = ({ personToShow, setpersonToShow }) => {
+const Persons = ({ persons, setpersons, personToShow, setpersonToShow }) => {
   return (
     <div>
       {personToShow.map((person) => (
@@ -44,7 +44,7 @@ const Persons = ({ personToShow, setpersonToShow }) => {
             onClick={() => {
               if (window.confirm(`Delete ${person.name} ?`)) {
                 personService.remove(person.id).then((returnedinfo) => {
-                  console.log(returnedinfo);
+                  setpersons(persons.filter((p) => p.id !== person.id));
                   setpersonToShow(
                     personToShow.filter((p) => p.id !== person.id)
                   );
@@ -92,6 +92,11 @@ const App = () => {
 
     personService.create(person).then((returnedPerson) => {
       setpersons(persons.concat(returnedPerson));
+      setpersonToShow(
+        persons
+          .concat(returnedPerson)
+          .filter((p) => p.name.toLowerCase().match(newFilter.toLowerCase()))
+      );
       setnewName("");
       setnewNumber("");
     });
@@ -127,7 +132,12 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons personToShow={personToShow} setpersonToShow={setpersonToShow} />
+      <Persons
+        persons={persons}
+        setpersons={setpersons}
+        personToShow={personToShow}
+        setpersonToShow={setpersonToShow}
+      />
     </div>
   );
 };
