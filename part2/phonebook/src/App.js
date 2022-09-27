@@ -79,8 +79,7 @@ const App = () => {
     console.log(event.target.value);
 
     // 防止用户能够添加已经存在于电话簿中的名字
-    const names = persons.map((person) => person.name);
-    if (names.includes(newName)) {
+    if (persons.filter((person) => person.name == newName).length > 0) {
       window.alert(`${newName} is already added to phonebook`);
       return;
     }
