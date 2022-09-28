@@ -29,7 +29,7 @@ const App = () => {
     console.log(event.target.value);
 
     // 防止用户能够添加已经存在于电话簿中的名字
-    const duplicate = persons.filter((person) => person.name == newName);
+    const duplicate = persons.filter((person) => person.name === newName);
     if (duplicate.length === 1) {
       if (
         window.confirm(
