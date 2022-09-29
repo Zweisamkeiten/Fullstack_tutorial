@@ -67,6 +67,12 @@ app.post("/api/persons", (request, response, next) => {
     });
   }
 
+  Person.findOne({ name: body.name }).then((result) => {
+    if (result) {
+      return response.status(403).json({ error: `${body.name} is existed.` });
+    }
+  });
+
   const person = Person({
     name: body.name,
     number: body.number,
