@@ -86,21 +86,31 @@ const App = () => {
       id: persons.length + 1,
     };
 
-    personService.create(person).then((returnedPerson) => {
-      setpersons(persons.concat(returnedPerson));
-      setpersonToShow(
-        persons
-          .concat(returnedPerson)
-          .filter((p) => p.name.toLowerCase().match(newFilter.toLowerCase()))
-      );
-      setnewName("");
-      setnewNumber("");
-      setnotifyStatus("success");
-      setmessage(`Added ${returnedPerson.name}`);
-      setTimeout(() => {
-        setmessage(null);
-      }, 5000);
-    });
+    personService
+      .create(person)
+      .then((returnedPerson) => {
+        setpersons(persons.concat(returnedPerson));
+        setpersonToShow(
+          persons
+            .concat(returnedPerson)
+            .filter((p) => p.name.toLowerCase().match(newFilter.toLowerCase()))
+        );
+        setnewName("");
+        setnewNumber("");
+        setnotifyStatus("success");
+        setmessage(`Added ${returnedPerson.name}`);
+        setTimeout(() => {
+          setmessage(null);
+        }, 5000);
+      })
+      .catch((error) => {
+        console.log(error.response.data.error);
+        setnotifyStatus("error");
+        setmessage(error.response.data.error);
+        setTimeout(() => {
+          setmessage(null);
+        }, 5000);
+      });
   };
 
   const handleNameChange = (event) => {
