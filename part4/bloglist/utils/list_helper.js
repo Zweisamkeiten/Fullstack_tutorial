@@ -1,4 +1,6 @@
-const dummy = (blogs) => {
+const { groupBy } = require("lodash");
+
+const dummy = () => {
   return 1;
 };
 
@@ -14,4 +16,20 @@ const favoriteBlog = (blogs) => {
   return blogs[indexOfMostLike];
 };
 
-module.exports = { dummy, totalLikes, favoriteBlog };
+const mostBlogs = (blogs) => {
+  const groupbyAuthor = groupBy(blogs, (blog) => blog.author);
+  const theNumberOfBlog = Object.values(groupbyAuthor).map(
+    (author) => author.length
+  );
+  const theIndexOfTopNumber = theNumberOfBlog.indexOf(
+    Math.max(...theNumberOfBlog)
+  );
+  const returnObject = {
+    author: Object.keys(groupbyAuthor)[theIndexOfTopNumber],
+    blogs: theNumberOfBlog[theIndexOfTopNumber],
+  };
+
+  return returnObject;
+};
+
+module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs };
