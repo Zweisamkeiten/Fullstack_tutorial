@@ -95,6 +95,17 @@ describe("delection of a note", () => {
   });
 });
 
+test("update the amount of likes for a blog post", async () => {
+  const likes = { likes: 2 };
+  const blogsAtStart = await helper.blogsInDb();
+  const blogToUpdate = blogsAtStart[0];
+  await api.put(`/api/blogs/${blogToUpdate.id}`).send(likes).expect(204);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  const blogUpdated = blogsAtEnd[0];
+  expect(blogUpdated.likes).toBe(2);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
