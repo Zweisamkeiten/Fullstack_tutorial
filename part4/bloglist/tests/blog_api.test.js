@@ -30,6 +30,30 @@ test("returned blog's unique identifier is named id", async () => {
   expect(returnedBlogs[0].id).toBeDefined();
 });
 
+test("a valid blog can be added", async () => {
+  const newBlog = {
+    title: "Fuck the society",
+    author: "Zweisamkeiten",
+    url: "https://zweisamkeiten.github.io",
+    likes: 7,
+  };
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+
+  const titles = blogsAtEnd.map((r) => r.title);
+  expect(titles).toContain("Fuck the society");
+});
+  const title = blogsAtEnd.map((r) => r.title);
+  expect(title).toContain("Fuck the society");
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
