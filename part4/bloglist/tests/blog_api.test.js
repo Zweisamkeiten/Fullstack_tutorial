@@ -64,6 +64,22 @@ test("likes property defaults to value 0 if it is missing from the request", asy
   expect(returnedBlog.likes).toBe(0);
 });
 
+test("verify that if the title or url properties are missing", async () => {
+  const newBlog1 = {
+    author: "Zweisamkeiten",
+    url: "https://zweisamkeiten.github.io",
+  };
+
+  await api.post("/api/blogs").send(newBlog1).expect(400);
+
+  const newBlog2 = {
+    title: "Fuck the society",
+    author: "Zweisamkeiten",
+  };
+
+  await api.post("/api/blogs").send(newBlog2).expect(400);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });

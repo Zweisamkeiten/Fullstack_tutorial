@@ -10,6 +10,10 @@ blogsRouter.get("/", (request, response) => {
 blogsRouter.post("/", (request, response) => {
   const body = request.body;
 
+  if (body.title === undefined || body.url === undefined) {
+    return response.status(400).json({ error: "title or url missing" });
+  }
+
   const blog = new Blog({
     title: body.title,
     author: body.author,
