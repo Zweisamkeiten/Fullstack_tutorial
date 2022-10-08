@@ -50,8 +50,18 @@ test("a valid blog can be added", async () => {
   const titles = blogsAtEnd.map((r) => r.title);
   expect(titles).toContain("Fuck the society");
 });
-  const title = blogsAtEnd.map((r) => r.title);
-  expect(title).toContain("Fuck the society");
+
+test("likes property defaults to value 0 if it is missing from the request", async () => {
+  const newBlog = {
+    title: "Fuck the society",
+    author: "Zweisamkeiten",
+    url: "https://zweisamkeiten.github.io",
+  };
+
+  const response = await api.post("/api/blogs").send(newBlog);
+  const returnedBlog = response.body;
+
+  expect(returnedBlog.likes).toBe(0);
 });
 
 afterAll(() => {
