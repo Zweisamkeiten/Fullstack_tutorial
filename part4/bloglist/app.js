@@ -7,10 +7,10 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const blogsRouter = require("./controllers/blogs");
 
-logger.info("connecting to ", config.MONGODB_URL);
+logger.info("connecting to ", config.MONGODB_URI);
 
 mongoose
-  .connect(config.MONGODB_URL)
+  .connect(config.MONGODB_URI)
   .then(() => {
     logger.info("connected to MongoDB");
   })
