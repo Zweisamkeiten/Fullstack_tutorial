@@ -1,7 +1,5 @@
-const jwt = require("jsonwebtoken");
 const blogsRouter = require("express").Router();
 const Blog = require("../models/blog");
-const User = require("../models/user");
 
 blogsRouter.get("/", async (request, response) => {
   const blogs = await Blog.find({}).populate("user", {
@@ -23,17 +21,12 @@ blogsRouter.get("/:id", async (request, response) => {
 
 blogsRouter.post("/", async (request, response) => {
   const body = request.body;
-  const token = request.token;
-  const decodedToken = jwt.verify(token, process.env.SECRET);
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: "token missing or invalid" });
-  }
+  // get user from request object
+  const user = request.user;
 
   if (body.title === undefined || body.url === undefined) {
     return response.status(400).json({ error: "title or url missing" });
   }
-
-  const user = await User.findById(decodedToken.id);
 
   const blog = new Blog({
     title: body.title,
@@ -51,11 +44,8 @@ blogsRouter.post("/", async (request, response) => {
 });
 
 blogsRouter.delete("/:id", async (request, response) => {
-  const decodedToken = jwt.verify(request.token, process.env.SECRET);
-  // 没有令牌
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: "token missing or invalid" });
-  }
+  // get user from request object
+  const user = request.user;
 
   const blogToDelete = await Blog.findById(request.params.id);
 
@@ -65,7 +55,7 @@ blogsRouter.delete("/:id", async (request, response) => {
   }
 
   // 只允许创建该blog的用户删除
-  if (blogToDelete.user.toString() === decodedToken.id.toString()) {
+  if (blogToDelete.user.toString() === user._id.toString()) {
     await Blog.findByIdAndRemove(request.params.id);
     response.status(204).end();
   } else {
