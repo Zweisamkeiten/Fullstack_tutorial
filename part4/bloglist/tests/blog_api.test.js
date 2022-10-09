@@ -5,6 +5,7 @@ const helper = require("./test_helper.js");
 
 const api = supertest(app);
 const Blog = require("../models/blog");
+const User = require("../models/user");
 
 beforeEach(async () => {
   await Blog.deleteMany({});
@@ -15,6 +16,13 @@ beforeEach(async () => {
   await Promise.all(promisseArray);
 
   console.log("done");
+
+  // create a user
+  await User.deleteMany({});
+
+  const newUser = { username: "root", name: "root", password: "password" };
+
+  await api.post("/api/users").send(newUser);
 });
 
 test("blogs are returned as json", async () => {
@@ -30,7 +38,12 @@ test("returned blog's unique identifier is named id", async () => {
   expect(returnedBlogs[0].id).toBeDefined();
 });
 
-test("a valid blog can be added", async () => {
+test("a valid blog can be added with token", async () => {
+  // log in
+  const user = { username: "root", password: "password" };
+  const response = await api.post("/api/login").send(user);
+  const token = response.body.token;
+
   const newBlog = {
     title: "Fuck the society",
     author: "Zweisamkeiten",
@@ -42,7 +55,7 @@ test("a valid blog can be added", async () => {
     .post("/api/blogs")
     .send(newBlog)
     .expect(201)
-    .expect("Content-Type", /application\/json/);
+    .set("Authorization", `Bearer ${token}`);
 
   const blogsAtEnd = await helper.blogsInDb();
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
