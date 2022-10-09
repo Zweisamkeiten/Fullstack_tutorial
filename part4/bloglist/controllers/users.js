@@ -8,7 +8,25 @@ usersRouter.get("/", async (request, response) => {
 });
 
 usersRouter.post("/", async (request, response) => {
-  const { username, name, password } = request.body;
+  const body = request.body;
+  if (!body.username || !body.password) {
+    return response
+      .status(400)
+      .json({ error: "Both username and password must be given" });
+  }
+
+  if (body.password.length < 3) {
+    return response
+      .status(400)
+      .json({ error: "Password must be at least of 3 characters of length" });
+  }
+
+  const { username, name, password } = body;
+
+  const existingUser = await User.findOne({ username });
+  if (existingUser) {
+    return response.status(400).json({ error: "username must be unique" });
+  }
 
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(password, saltRounds);
