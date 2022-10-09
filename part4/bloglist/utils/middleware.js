@@ -30,6 +30,10 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).json({ error: error.message });
   } else if (error.name === "ValidatorError") {
     return response.status(400).json({ error: error.message });
+  } else if (error.name === "JsonWebTokenError") {
+    return response.status(401).json({ error: "invalid token" });
+  } else if (error.name === "TokenExpierdError") {
+    return response.status(401).json({ error: "token expired" });
   }
 
   next(error);
