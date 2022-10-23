@@ -9,10 +9,23 @@ const App = () => {
   const [username, setusername] = useState("");
   const [password, setpassword] = useState("");
   const [user, setuser] = useState(null);
+  const [islogged, setislogged] = useState(false);
 
   useEffect(() => {
-    if (user !== null) blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, [user]);
+    const loggedUserJSON = window.localStorage.getItem("loggedBlogListUser");
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setuser(user);
+      blogService.setToken(user.token);
+      getAllBlogs();
+    }
+  }, [islogged]);
+
+  const getAllBlogs = async () => {
+    const blogs = await blogService.getAll();
+    console.log(blogs);
+    setBlogs(blogs);
+  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -21,9 +34,11 @@ const App = () => {
       const user = await loginService.login({ username, password });
 
       blogService.setToken(user.token);
+      window.localStorage.setItem("loggedBlogListUser", JSON.stringify(user));
       setuser(user);
       setusername("");
       setpassword("");
+      setislogged(!islogged);
     } catch (execption) {}
   };
 
@@ -61,7 +76,19 @@ const App = () => {
   ) : (
     <div>
       <h2>blogs</h2>
-      <p> {user.name} logged in</p>
+      <div>
+        {user.name} logged in
+        <button
+          onClick={() => {
+            window.localStorage.removeItem("loggedBlogListUser");
+            setuser(null);
+            setislogged(!islogged);
+          }}
+        >
+          logout
+        </button>
+      </div>
+      <br />
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
