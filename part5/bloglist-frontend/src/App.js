@@ -1,9 +1,11 @@
 // vim: set ft=javascriptreact :
 import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
+import Notification from "./components/Notification";
 import blogServices from "./services/blogs";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import "./index.css";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -14,6 +16,8 @@ const App = () => {
   const [title, settitle] = useState("");
   const [author, setauthor] = useState("");
   const [url, seturl] = useState("");
+  const [message, setmessage] = useState(null);
+  const [notifyStatus, setnotifyStatus] = useState("success");
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogListUser");
@@ -42,13 +46,20 @@ const App = () => {
       setusername("");
       setpassword("");
       setislogged(!islogged);
-    } catch (execption) {}
+    } catch (execption) {
+      setnotifyStatus("error");
+      setmessage("wrong username or password");
+      setTimeout(() => {
+        setmessage(null);
+      }, 5000);
+    }
   };
 
   const loginForm = () => {
     return (
       <div>
         <h2>Log in to application</h2>
+        <Notification message={message} notifyStatus={notifyStatus} />
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -77,17 +88,30 @@ const App = () => {
   const handleCreateNew = async (event) => {
     event.preventDefault();
 
-    const blogObject = {
-      title: title,
-      url: url,
-      author: author,
-    };
+    try {
+      const blogObject = {
+        title: title,
+        url: url,
+        author: author,
+      };
 
-    const response = await blogServices.create(blogObject);
-    setBlogs(blogs.concat(response))
-    settitle("")
-    setauthor("")
-    seturl("")
+      const response = await blogServices.create(blogObject);
+      setBlogs(blogs.concat(response));
+      settitle("");
+      setauthor("");
+      seturl("");
+      setnotifyStatus("success");
+      setmessage(`a new blog ${response.title} by ${response.author}`);
+      setTimeout(() => {
+        setmessage(null);
+      }, 5000);
+    } catch (execption) {
+      setnotifyStatus("error");
+      setmessage("add a new blog failed");
+      setTimeout(() => {
+        setmessage(null);
+      }, 5000);
+    }
   };
 
   return user === null ? (
@@ -95,6 +119,7 @@ const App = () => {
   ) : (
     <div>
       <h2>blogs</h2>
+      <Notification message={message} notifyStatus={notifyStatus} />
       <div>
         {user.name} logged in
         <button
