@@ -2,17 +2,66 @@
 import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
+import loginService from "./services/login";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
+  const [username, setusername] = useState("");
+  const [password, setpassword] = useState("");
+  const [user, setuser] = useState(null);
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
+    if (user !== null) blogService.getAll().then((blogs) => setBlogs(blogs));
+  }, [user]);
 
-  return (
+  const handleLogin = async (event) => {
+    event.preventDefault();
+
+    try {
+      const user = await loginService.login({ username, password });
+
+      blogService.setToken(user.token);
+      setuser(user);
+      setusername("");
+      setpassword("");
+    } catch (execption) {}
+  };
+
+  const loginForm = () => {
+    return (
+      <div>
+        <h2>Log in to application</h2>
+        <form onSubmit={handleLogin}>
+          <div>
+            username
+            <input
+              type="text"
+              name="username"
+              value={username}
+              onChange={({ target }) => setusername(target.value)}
+            />
+          </div>
+          <div>
+            password
+            <input
+              type="password"
+              name="password"
+              value={password}
+              onChange={({ target }) => setpassword(target.value)}
+            />
+          </div>
+          <button type="onSubmit">login</button>
+        </form>
+      </div>
+    );
+  };
+
+  return user === null ? (
+    loginForm()
+  ) : (
     <div>
       <h2>blogs</h2>
+      <p> {user.name} logged in</p>
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
