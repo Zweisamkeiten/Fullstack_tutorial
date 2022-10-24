@@ -8,6 +8,7 @@ import blogService from "./services/blogs";
 import loginService from "./services/login";
 import "./index.css";
 import BlogForm from "./components/BlogForm";
+import Togglable from "./components/Togglable";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -113,16 +114,17 @@ const App = () => {
             </button>
           </div>
           <br />
-          <h2>create new</h2>
-          <BlogForm
-            handleCreateNew={handleCreateNew}
-            title={title}
-            handleTitleChange={({ target }) => settitle(target.value)}
-            author={author}
-            handleAuthorChange={({ target }) => setauthor(target.value)}
-            url={url}
-            handleUrlChange={({ target }) => seturl(target.value)}
-          />
+          <Togglable buttonLabel="new note">
+            <BlogForm
+              handleCreateNew={handleCreateNew}
+              title={title}
+              handleTitleChange={({ target }) => settitle(target.value)}
+              author={author}
+              handleAuthorChange={({ target }) => setauthor(target.value)}
+              url={url}
+              handleUrlChange={({ target }) => seturl(target.value)}
+            />
+          </Togglable>
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
           ))}
