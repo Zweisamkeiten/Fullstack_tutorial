@@ -68,6 +68,26 @@ const App = () => {
     }
   };
 
+  const handleLikes = async (id, newlikes) => {
+    try {
+      await blogService.addLikes(id, newlikes);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDelete = async (blog) => {
+    if (window.confirm(`Remove blog ${blog.title}`)) {
+      try {
+        await blogService.remove(blog.id);
+        setBlogs(blogs.filter((b) => b.id !== blog.id));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    return;
+  };
+
   const blogFormRef = useRef();
 
   const blogForm = () => (
@@ -101,7 +121,13 @@ const App = () => {
           {blogs
             .sort((a, b) => b.likes - a.likes)
             .map((blog) => (
-              <Blog key={blog.id} blog={blog} />
+              <Blog
+                key={blog.id}
+                blog={blog}
+                curuser={user}
+                remove={handleDelete}
+                addLikes={handleLikes}
+              />
             ))}
         </div>
       )}
