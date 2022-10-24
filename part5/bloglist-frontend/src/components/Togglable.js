@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 
 // vim: set ft=javascriptreact :
-const Togglable = (props) => {
+const Togglable = forwardRef((props, refs) => {
   const [visible, setvisible] = useState(false);
 
   const hideWhenVisible = { display: visible ? "none" : "" };
@@ -10,6 +10,10 @@ const Togglable = (props) => {
   const toggleVisibility = () => {
     setvisible(!visible);
   };
+
+  useImperativeHandle(refs, () => {
+    return { toggleVisibility };
+  });
 
   return (
     <div>
@@ -22,6 +26,6 @@ const Togglable = (props) => {
       </div>
     </div>
   );
-};
+});
 
 export default Togglable;

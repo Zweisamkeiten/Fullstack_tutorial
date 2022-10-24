@@ -1,5 +1,5 @@
 // vim: set ft=javascriptreact :
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
@@ -51,6 +51,7 @@ const App = () => {
 
   const handleCreateNew = async (blogObject) => {
     try {
+      blogFormRef.current.toggleVisibility();
       const response = await blogServices.create(blogObject);
       setBlogs(blogs.concat(response));
       setnotifyStatus("success");
@@ -66,6 +67,14 @@ const App = () => {
       }, 5000);
     }
   };
+
+  const blogFormRef = useRef();
+
+  const blogForm = () => (
+    <Togglable buttonLabel="create new blog" ref={blogFormRef}>
+      <BlogForm createNewBlog={handleCreateNew} />
+    </Togglable>
+  );
 
   return (
     <div>
@@ -88,9 +97,7 @@ const App = () => {
             </button>
           </div>
           <br />
-          <Togglable buttonLabel="create new blog">
-            <BlogForm createNewBlog={handleCreateNew} />
-          </Togglable>
+          {blogForm()}
           {blogs
             .sort((a, b) => b.likes - a.likes)
             .map((blog) => (
