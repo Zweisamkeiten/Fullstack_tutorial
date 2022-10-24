@@ -23,6 +23,14 @@ const create = async (newObject) => {
   return response.data;
 };
 
-const blogServices = { getAll, create, setToken };
+const addLikes = async (id, newObject) => {
+  const config = {
+    headers: { Authorization: token },
+  };
+  const response = await axios.put(`${baseUrl}/${id}`, newObject, config);
+  return response.data;
+};
+
+const blogServices = { getAll, create, addLikes, setToken };
 
 export default blogServices;
