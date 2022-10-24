@@ -1,10 +1,20 @@
-const LoginForm = ({
-  handleLogin,
-  username,
-  handleUsernameChange,
-  password,
-  handlePasswordChange,
-}) => {
+import { useState } from "react";
+
+const LoginForm = ({ createUPKVP }) => {
+  const [username, setusername] = useState("");
+  const [password, setpassword] = useState("");
+
+  const handleLogin = (event) => {
+    event.preventDefault();
+
+    const upKVP = { username, password };
+
+    createUPKVP(upKVP);
+
+    setusername("");
+    setpassword("");
+  };
+
   return (
     <div>
       <h2>Log in to application</h2>
@@ -15,7 +25,7 @@ const LoginForm = ({
             type="text"
             name="username"
             value={username}
-            onChange={handleUsernameChange}
+            onChange={({ target }) => setusername(target.value)}
           />
         </div>
         <div>
@@ -24,7 +34,7 @@ const LoginForm = ({
             type="password"
             name="password"
             value={password}
-            onChange={handlePasswordChange}
+            onChange={({ target }) => setpassword(target.value)}
           />
         </div>
         <button type="onSubmit">login</button>

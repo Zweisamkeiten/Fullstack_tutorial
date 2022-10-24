@@ -12,13 +12,8 @@ import Togglable from "./components/Togglable";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [username, setusername] = useState("");
-  const [password, setpassword] = useState("");
   const [user, setuser] = useState(null);
   const [islogged, setislogged] = useState(false);
-  const [title, settitle] = useState("");
-  const [author, setauthor] = useState("");
-  const [url, seturl] = useState("");
   const [message, setmessage] = useState(null);
   const [notifyStatus, setnotifyStatus] = useState("success");
 
@@ -37,17 +32,13 @@ const App = () => {
     setBlogs(blogs);
   };
 
-  const handleLogin = async (event) => {
-    event.preventDefault();
-
+  const handleLogin = async (upKVP) => {
     try {
-      const user = await loginService.login({ username, password });
+      const user = await loginService.login(upKVP);
 
       blogService.setToken(user.token);
       window.localStorage.setItem("loggedBlogListUser", JSON.stringify(user));
       setuser(user);
-      setusername("");
-      setpassword("");
       setislogged(!islogged);
     } catch (execption) {
       setnotifyStatus("error");
@@ -58,21 +49,10 @@ const App = () => {
     }
   };
 
-  const handleCreateNew = async (event) => {
-    event.preventDefault();
-
+  const handleCreateNew = async (blogObject) => {
     try {
-      const blogObject = {
-        title: title,
-        url: url,
-        author: author,
-      };
-
       const response = await blogServices.create(blogObject);
       setBlogs(blogs.concat(response));
-      settitle("");
-      setauthor("");
-      seturl("");
       setnotifyStatus("success");
       setmessage(`a new blog ${response.title} by ${response.author}`);
       setTimeout(() => {
@@ -92,13 +72,7 @@ const App = () => {
       <h2>Blogs</h2>
       <Notification message={message} notifyStatus={notifyStatus} />
       {user === null ? (
-        <LoginForm
-          handleLogin={handleLogin}
-          username={username}
-          password={password}
-          handleUsernameChange={({ target }) => setusername(target.value)}
-          handlePasswordChange={({ target }) => setpassword(target.value)}
-        />
+        <LoginForm createUPKVP={handleLogin} />
       ) : (
         <div>
           <div>
@@ -115,15 +89,7 @@ const App = () => {
           </div>
           <br />
           <Togglable buttonLabel="new note">
-            <BlogForm
-              handleCreateNew={handleCreateNew}
-              title={title}
-              handleTitleChange={({ target }) => settitle(target.value)}
-              author={author}
-              handleAuthorChange={({ target }) => setauthor(target.value)}
-              url={url}
-              handleUrlChange={({ target }) => seturl(target.value)}
-            />
+            <BlogForm createNewBlog={handleCreateNew} />
           </Togglable>
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
