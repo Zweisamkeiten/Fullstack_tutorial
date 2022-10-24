@@ -88,7 +88,7 @@ const App = () => {
             </button>
           </div>
           <br />
-          <Togglable buttonLabel="new note">
+          <Togglable buttonLabel="create new blog">
             <BlogForm createNewBlog={handleCreateNew} />
           </Togglable>
           {blogs.map((blog) => (
